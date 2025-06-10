@@ -1,0 +1,2 @@
+select ClientTypeDesc, GeoDesc, AcctTypeDesc, AlertLevelDesc, AcctStatDesc, CivilStselect clienttype, geographical, accounttype, alertlevel, accountstatus, civilstatus
+from client;

@@ -1,0 +1,13 @@
+select concat (ClientIDBrCode,'-',ClientID,'-',ClientIDChkDgt) ClientTypeDesc, GeoDesc, AcctTypeDesc, AlertLevelDesc, AcctStatDesc, CivilStatDesc,
+
+(select SUM(AMT*-1) FROM sldtl as sl  where SLC_CODE = 31 AND SLT_CODE = 1 AND SLE_CODE = 11
+                                   AND sl.SL_BRCODE=C.ClientIDBrCode AND sl.SL_CLIENTID= C.ClientID
+                                   GROUP BY SL_BRCODE, SL_CLIENTID, REF_NO, SLT_CODE, SLC_CODE) AS `SHARE CAP`
+from client as C
+
+left join clienttype as cl on cl.ClientTypeID=C.CLIENTTYPE
+left join geo as g on g.GeoID=C.GEOGRAPHICAL
+left join accttype as ac on ac.AccTypeID=C.ACCOUNTTYPE
+left join alertlevel as al on al.AlertLevelID=C.ALERTLEVEL
+left join acctstat as at on at.AcctStatID=C.ACCOUNTSTATUS
+left join civilstat as cv on cv.CivilStatID=C.CIVILSTATUS;
