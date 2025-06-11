@@ -1,0 +1,66 @@
+﻿select concat
+(
+LPAD(C.ClientIDBrCode,4, '0'), '-',
+LPAD(C.ClientID,7,   '0'), '-',
+LPAD(C.ClientIDChkDgt,1, '0')) as `CLIENT ID`,
+
+cl.ClientTypeDesc as `CLIENT TYPE`,
+g.GeoDesc as `GEOGRAPHICAL`,
+at.AcctTypeDesc as `ACCOUNT TYPE`,
+al.AlertLevelDesc as `ALERT LEVEL`,
+ac.AcctStatDesc as `ACCOUNT STATUS`,
+cv.CivilStatDesc as `CIVIL STATUS`,
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 31 AND SLT_CODE= 1 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `SHARE CAPITAL`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 22 AND SLT_CODE= 1 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `SAVINGS DEPOSIT`,
+
+(SELECT SUM(AMT*1) from sldtl as sl where SLC_CODE= 12 AND SLT_CODE= 8 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `EMERGENCY LOAN`,
+
+(SELECT SUM(AMT*1) from sldtl as sl where SLC_CODE= 12 AND SLT_CODE= 3 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `PRODUCTION LOAN`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 29 AND SLT_CODE= 5 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `PCIC`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 29 AND SLT_CODE= 10 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `MUTUAL AID PREMIUM`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 13 AND SLT_CODE= 1 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `A/R TRADE`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 31 AND SLT_CODE= 3 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `DEPOSIT FOR SHARE`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 29 AND SLT_CODE= 3 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `CISP PAYABLE`,
+
+(SELECT SUM(AMT*-1) from sldtl as sl where SLC_CODE= 12 AND SLT_CODE= 2 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `KAUNLARAN LOAN`,
+
+(SELECT SUM(AMT*1) from sldtl as sl where SLC_CODE= 12 AND SLT_CODE= 4 AND SLE_CODE= 11
+AND sl.SL_BRCODE=C.ClientIDBrCode
+and sl.SL_CLIENTID=C.ClientID) AS `PUHUNAN LOAN`
+
+FROM client as C
+
+left join clienttype as cl on cl.ClientTypeID=C.CLIENTTYPE
+
+left join geo as g on g.GeoID=C.GEOGRAPHICAL
+left join accttype as at on at.AccTypeID=C.ACCOUNTTYPE
+left join alertlevel as al on al.AlertLevelID=C.ALERTLEVEL
+left join acctstat as ac on ac.AcctStatID=C.ACCOUNTSTATUS
+left join civilstat as cv on cv.CivilStatID=C.CLIENTTYPE
+GROUP BY CLIENTID;
