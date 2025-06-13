@@ -1,0 +1,1 @@
+select month(DATE_ADD(STR_TO_DATE('1 May, 2013', '%d %M, %Y'), INTERVAL 25 WEEK)) AS `EXTRACTED DATE`;
